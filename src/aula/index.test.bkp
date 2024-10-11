@@ -1,0 +1,59 @@
+import { ehPrimo, msc, mscp, ordenaArray, sanitizaArray, separaArray } from "."
+
+describe("TDD", () => {
+  test("deve verificar se um numero é primo", () => {
+    expect(ehPrimo(undefined)).toBe(null)
+    expect(ehPrimo(null)).toBe(null)
+    expect(ehPrimo("3")).toBe(null)
+    expect(ehPrimo("asdf")).toBe(null)
+    expect(ehPrimo(-3)).toBe(null)
+    expect(ehPrimo(0)).toBe(null)
+    expect(ehPrimo(3)).toBe(true)
+    expect(ehPrimo(1)).toBe(true)
+    expect(ehPrimo(7)).toBe(true)
+    expect(ehPrimo(14)).toBe(false)
+    expect(ehPrimo(40)).toBe(false)
+    expect(ehPrimo(23)).toBe(true)
+    expect(ehPrimo(10e8)).toBe(false)
+  })
+
+  test("deve sanitizar uma lista de numeros", () => {
+    expect(sanitizaArray([4, 1, 7, 21, 5, 9, 7, 8, 8, 6, "asdf"])).toEqual([4, 1, 7, 21, 5, 9, 8, 6])
+    expect(sanitizaArray([4, 1, 7, "3", 21, undefined, 5, 9, null, 8, 6, 20, "asdf"])).toEqual([4, 1, 7, 21, 5, 9, 8, 6, 20])
+  })
+
+  test("deve ordenar uma lista de numeros", () => {
+    expect(ordenaArray([4, 1, 7, 21, 5, 9, 8, 6, "asdf"])).toEqual([1, 4, 5, 6, 7, 8, 9, 21])
+    expect(ordenaArray([4, 1, 7, "3", 21, undefined, 5, 9, null, 8, 6, 20, "asdf"])).toEqual([1, 4, 5, 6, 7, 8, 9, 20, 21])
+    expect(ordenaArray([4, 1, 7, 21, 5, 7, 9, 8, 6, "asdf"])).toEqual([1, 4, 5, 6, 7, 8, 9, 21])
+  })
+
+  test("deve separar os consecutivos de uma lista de numeros", () => {
+    expect(separaArray([4, 1, 7, 21, 5, 9, 8, 6, "asdf"])).toEqual([[4, 5, 6, 7, 8, 9]])
+    expect(separaArray([4, 1, 7, "3", 30, 21, undefined, 5, 9, null, 8, 6, 20, "asdf"])).toEqual([
+      [4, 5, 6, 7, 8, 9],
+      [20, 21],
+    ])
+    expect(separaArray([4, 1, 7, "3", 21, undefined, 5, 9, null, 8, 6, 20, "asdf"])).toEqual([
+      [4, 5, 6, 7, 8, 9],
+      [20, 21],
+    ])
+    expect(separaArray([3, 7, 21, 5, 2, 7, 9, 8, 6, "asdf", 11, 12])).toEqual([
+      [2, 3],
+      [5, 6, 7, 8, 9],
+      [11, 12],
+    ])
+  })
+
+  test("deve retornar a maior soma de n numeros consecutivos", () => {
+    expect(msc([4, 1, 7, 21, 5, 9, 8, 6, "asdf"])).toBe(39)
+    expect(msc([4, 1, 7, 21, 5, 7, 9, 8, 6, "asdf"])).toBe(39)
+    expect(msc([4, 1, 7, 21, 5, 9, 8, 6, 20, "asdf"])).toBe(41)
+  })
+
+  test("deve retornar a maior soma de n numeros consecutivos, se incluir apenas um nr primo", () => {
+    expect(mscp([4, 1, 7, 21, 5, 9, 8, 6, "asdf"])).toBe(0)
+    expect(mscp([3, 7, 21, 5, 2, 7, 9, 8, 6, "asdf", 11, 12])).toBe(23)
+    expect(mscp([4, 1, 7, 21, 5, 9, 8, 6, 20, "asdf"])).toBe(0)
+  })
+})

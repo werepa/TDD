@@ -1,0 +1,86 @@
+export const ehPrimo = function (nr) {
+  if (!nr || typeof nr === "string" || isNaN(nr) || nr < 0) return null
+  let primo = true
+  for (let i = 2; i < nr; i++) {
+    if (nr % i === 0) return false
+  }
+  return primo
+}
+
+export const sanitizaArray = function (listaSuja) {
+  const lista = []
+  listaSuja.map((item) => {
+    if (typeof item === "number") {
+      if (!lista.includes(item)) lista.push(item)
+    }
+  })
+  return lista
+}
+
+export const ordenaArray = function (listaSuja) {
+  const lista = sanitizaArray(listaSuja)
+  return lista.sort((a, b) => {
+    if (a < b) return -1
+    if (a > b) return 1
+  })
+}
+
+export const separaArray = function (listaSuja) {
+  const resultado = [[]]
+  ordenaArray(listaSuja).forEach((item) => {
+    if (item !== [...[...resultado].pop()].pop() + 1) resultado.push([])
+    resultado[resultado.length - 1].push(item)
+  })
+  return resultado.filter((l) => l.length > 1)
+}
+
+// export const separaArray = function (listaSuja) {
+//   return ordenaArray(listaSuja)
+//     .reduce(
+//       (r, item) => {
+//         if (item !== r[r.length - 1][r[r.length - 1].length - 1] + 1) r.push([])
+//         r[r.length - 1].push(item)
+//         return r
+//       },
+//       [[]]
+//     )
+//     .filter((l) => l.length > 1)
+// }
+
+// export const separaArray = function (listaSuja) {
+//   const lista = ordenaArray(listaSuja)
+//   const resultado = [[]]
+//   for (let i = 0; i < lista.length; i++) {
+//     resultado[resultado.length - 1].push(lista[i])
+//     if ((i < lista.length - 1, lista[i] + 1 !== lista[i + 1])) resultado.push([])
+//   }
+//   return resultado.filter((i) => i.length > 1)
+// }
+
+export const msc = function (listaSuja) {
+  const listaArraysConsecutivos = separaArray(listaSuja)
+  let maiorSoma = 0
+  listaArraysConsecutivos.map((listaConsecutivos) => {
+    let soma = 0
+    listaConsecutivos.map((item) => {
+      soma += item
+    })
+    if (soma > maiorSoma) maiorSoma = soma
+  })
+  return maiorSoma
+}
+
+export const mscp = function (listaSuja) {
+  const listaArraysConsecutivos = separaArray(listaSuja)
+  let maiorSoma = 0
+  listaArraysConsecutivos.map((listaConsecutivos) => {
+    let soma = 0
+    let qtdePrimos = 0
+    listaConsecutivos.map((item) => {
+      soma += item
+      if (ehPrimo(item)) qtdePrimos++
+    })
+    if (soma > maiorSoma && qtdePrimos === 1) maiorSoma = soma
+  })
+  return maiorSoma
+}
